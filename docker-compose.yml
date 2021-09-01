@@ -1,0 +1,13 @@
+version: "2.2"
+services:
+  app:
+    image: "chat-app"
+    container_name: "chat-app"
+    restart: unless-stopped
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    environment:
+      FLASK_ENV: development
