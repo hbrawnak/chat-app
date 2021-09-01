@@ -1,6 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_pymongo import PyMongo
+from auth import login, register
 
 app = Flask(__name__, template_folder='templates')
+
+mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/todo_db")
+db = mongodb_client.db
+
+app.config["MONGO_URI"] = "mongodb://localhost:27017/chatapp"
+mongodb_client = PyMongo(app)
+db = mongodb_client.db
 
 
 @app.route('/', methods=['GET', 'POST'])
