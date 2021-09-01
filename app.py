@@ -22,5 +22,10 @@ def chat():
     return render_template('chat.html')
 
 
+@app.route('/info', methods=['GET', 'POST'])
+def info():
+    return render_template('info.html')
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)

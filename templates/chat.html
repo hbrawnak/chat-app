@@ -3,11 +3,35 @@
 <h1>{% block title %}Chat{% endblock %}</h1>
 
 {% block content %}
-<div class="row align-middle">
-    <div class="col-md-6">
-        hello
-        hi
-        hello
+    <div class="chat-block">
+        <div class="chat-header">
+            <div class="d-flex justify-content-between p-3">
+                <p>&nbsp;</p>
+                <p>Chat Header</p>
+                <p><a class="btn btn-secondary" href="#">Info</a></p>
+            </div>
+        </div>
+        <div class="chat-body">
+            <div class="message-content">
+                <ul>
+                    <li class="w-75">Naeem: Hi</li>
+                    <li class="w-75">Rana: ki obostha?</li>
+
+                    <li class="w-75 float-right">Habib: Hello</li>
+                </ul>
+            </div>
+            <div class="message-box">
+                <form class="mt-4 pb-2" method="post" action="/">
+                    <div class="row mx-0 w-100">
+                        <div class="col-8">
+                            <input type="text" class="form-control" name="message" id="message" placeholder="Username">
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-secondary btn-block">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
 {% endblock %}

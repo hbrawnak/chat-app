@@ -1,0 +1,53 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+.content-block {
+    width: 375px;
+    background: #f0f0f0;
+}
+
+.chat-block {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.chat-header {
+    background: #a8a6a6;
+}
+
+.message-content li {
+    background: #a8a6a6;
+    padding: 8px;
+    margin-top: 16px;
+    list-style: none;
+}
+
+.message-content li.float-right {
+    float: right;
+    margin-right: 30px;
+}
+
+.message-content ul {
+    overflow: hidden;
+}
+
+.info-block {
+    min-height: 100vh;
+}
+
+.info-body li.list-group-item {
+    background: #a8a6a6;
+}
+
+@media (max-width: 767px) {
+    .content-block {
+        width: 100%;
+    }
+}
