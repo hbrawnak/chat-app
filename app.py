@@ -1,15 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
-from flask_pymongo import PyMongo
-from auth import login, register
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from . import auth
 
 app = Flask(__name__, template_folder='templates')
-
-mongodb_client = PyMongo(app, uri="mongodb://localhost:27017/todo_db")
-db = mongodb_client.db
-
-app.config["MONGO_URI"] = "mongodb://localhost:27017/chatapp"
-mongodb_client = PyMongo(app)
-db = mongodb_client.db
+app.secret_key = "FvigywQvsF6D2Yc"
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -17,11 +10,13 @@ def home():
     if request.method == 'POST':
         try:
             r = request.form['username']
-            print(r)
-            return redirect(url_for('chat'))
+            if r:
+                auth.set_user(r)
+                return redirect(url_for('chat'))
+            else:
+                return redirect(url_for('home'))
         except Exception as e:
-            print(str(e))
-            return redirect(url_for('/'))
+            return redirect(url_for('home'))
     else:
         return render_template('login.html')
 
