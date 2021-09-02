@@ -1,6 +1,8 @@
 from flask import redirect, url_for
 from functools import wraps
 from .auth import logged_in
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def login_required(f):
