@@ -16,6 +16,7 @@ def set_user(username):
 
 def login(username):
     set_user_session(username=username)
+    set_user_active(username)
 
 
 def register(username):
@@ -23,6 +24,7 @@ def register(username):
 
 
 def logout():
+    set_user_inactive(get_user_session())
     session.pop('user', None)
 
 
@@ -38,12 +40,14 @@ def get_user_session():
     return session.get('user')
 
 
-def set_user_inactive():
-    pass
+def set_user_inactive(username):
+    q = {"username": username}
+    db.users.update_one(q, {"$set": {"isActive": False}})
 
 
-def set_user_active():
-    pass
+def set_user_active(username):
+    q = {"username": username}
+    db.users.update_one(q, {"$set": {"isActive": True}})
 
 
 def logged_in():
