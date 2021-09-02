@@ -20,6 +20,7 @@ def home():
             else:
                 return redirect(url_for('home'))
         except Exception as e:
+            print(str(e))
             return redirect(url_for('home'))
     else:
         return render_template('login.html')

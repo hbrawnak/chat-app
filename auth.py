@@ -38,6 +38,14 @@ def get_user_session():
     return session.get('user')
 
 
+def set_user_inactive():
+    pass
+
+
+def set_user_active():
+    pass
+
+
 def logged_in():
     if not get_user_session():
         return False
