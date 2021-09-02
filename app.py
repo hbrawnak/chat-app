@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from . import auth
 from . import login_required
+from . import helper
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = "FvigywQvsF6D2Yc"
@@ -35,7 +36,8 @@ def chat():
 @app.route('/info', methods=['GET', 'POST'])
 @login_required
 def info():
-    return render_template('info.html')
+    users = helper.get_chat_room_active_users()
+    return render_template('info.html', users=users)
 
 
 @app.route('/logout', methods=['GET'])
