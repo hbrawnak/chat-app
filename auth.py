@@ -22,6 +22,10 @@ def register(username):
     return db.users.insert_one({"username": username, "isActive": True})
 
 
+def logout():
+    session.pop('user', None)
+
+
 def _user_is_exist(username):
     return db.users.find_one({"username": username})
 
@@ -32,3 +36,10 @@ def set_user_session(username):
 
 def get_user_session():
     return session.get('user')
+
+
+def logged_in():
+    if not get_user_session():
+        return False
+    else:
+        return True
