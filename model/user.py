@@ -10,8 +10,8 @@ class User:
         self.username = username
         self.isActive = True
 
-    def save_one(self, username):
-        return db.users.insert_one({"username": username, "isActive": self.isActive})
+    def save_one(self):
+        return db.users.insert_one({"username": self.username, "isActive": self.isActive})
 
     @classmethod
     def update_one(cls, where_key_value, set_key_value):
