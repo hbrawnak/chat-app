@@ -11,6 +11,12 @@ body {
     background: #f0f0f0;
 }
 
+.chat-body {
+    max-height: calc(100vh - 156px);
+    overflow: auto;
+    position: relative;
+}
+
 .chat-block {
     min-height: 100vh;
     display: flex;
@@ -30,16 +36,27 @@ body {
 }
 
 .message-content li.float-right {
-    float: right;
+    align-self: flex-end;
     margin-right: 30px;
 }
 
+.message-content li small {
+    font-size: 9px;
+}
+
 .message-content ul {
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+
 }
 
 .info-block {
     min-height: 100vh;
+}
+
+.message-box {
+
 }
 
 .info-body li.list-group-item {

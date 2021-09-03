@@ -13,26 +13,32 @@
             </div>
         </div>
         <div class="chat-body">
-
             <div class="message-content">
                 <ul id="chat" data-user="{{ user }}">
+                    {% for message in messages %}
+                        <li class="w-75 {{ 'float-right' if message.user == user }} ">
+                            {{ message.user + ': ' + message.text }}
+                            <br>
+                            <small>{{ message.created_at.strftime("%I:%M %p") }}</small>
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
-            <div class="message-box">
-                <form class="mt-4 pb-2">
-                    <div class="row mx-0 w-100">
-                        <div class="col-8">
-                            <input type="text" id="text" class="form-control" name="message" id="message"
-                                   placeholder="type
-                            your message ..">
-                        </div>
-                        <div class="col-4">
-                            <button type="button" id="send" class="btn btn-secondary btn-block">Send
-                            </button>
-                        </div>
+        </div>
+
+        <div class="message-box">
+            <form class="mt-4 pb-2">
+                <div class="row mx-0 w-100">
+                    <div class="col-8">
+                        <input type="text" id="text" class="form-control" name="message" id="message"
+                               placeholder="type your message .." autocomplete="off">
                     </div>
-                </form>
-            </div>
+                    <div class="col-4">
+                        <button type="button" id="send" class="btn btn-secondary btn-block">Send
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -44,15 +50,12 @@
             socket.on('connect', function () {
                 socket.emit('join', {});
             });
-            socket.on('status', function (data) {
-                let tx = GenerateMessageHtml(data)
-                $('#chat').append(tx);
-                $('#chat').scrollTop($('#chat')[0].scrollHeight);
-            });
+
             socket.on('message', function (data) {
                 console.log(data)
                 let tx = GenerateMessageHtml(data)
-                $('#chat').append(tx + '\n');
+                $('#chat').append(tx);
+                //$('#chat').scrollTop($('#chat')[0].scrollHeight);
                 $('#chat').scrollTop($('#chat')[0].scrollHeight);
             });
             $('#send').click(function (e) {
@@ -76,15 +79,11 @@
         }
 
         function GenerateMessageHtml(data) {
-            if (data.type === 'status') {
-                return "<p>" + data.msg + "</p>";
+            let current_user = $("#chat").attr('data-user')
+            if (current_user === data.user) {
+                return "<li class=\"w-75 float-right\">" + data.msg + "<br><small>"+ data.create_at +"</small></li>";
             } else {
-                let current_user = $("#chat").attr('data-user')
-                if (current_user === data.user) {
-                    return "<li class=\"w-75 float-right\">" + data.msg + "</li>";
-                } else {
-                    return "<li class=\"w-75\">" + data.msg + "</li>";
-                }
+                return "<li class=\"w-75\">" + data.msg + "<br><small>"+ data.create_at +"</small></li>";
             }
         }
     </script>

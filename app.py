@@ -1,26 +1,30 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-from flask_socketio import SocketIO, join_room, emit, send
+import os
 
-from . import auth, login_required
-from .helper import get_chat_room_active_users
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask_socketio import SocketIO, join_room, emit
+from datetime import datetime
+
+from auth import logged_in, get_user_session, set_user, logout as user_logout
+from helper import get_chat_room_active_users, save_message, get_messages
+from . import login_required
 
 app = Flask(__name__, template_folder='templates')
-app.secret_key = "FvigywQvsF6D2Yc"
-
 socketio = SocketIO(app, manage_session=False)
-room_name = 'chatapp'
+
+app.secret_key = os.getenv('APP_SECRET')
+room_name = os.getenv('APP_NAME')
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    if auth.logged_in():
+    if logged_in():
         return redirect(url_for('chat'))
 
     if request.method == 'POST':
         try:
             r = request.form['username']
             if r:
-                auth.set_user(r)
+                set_user(r)
                 return redirect(url_for('chat'))
             else:
                 return redirect(url_for('home'))
@@ -34,7 +38,7 @@ def home():
 @app.route('/chat', methods=['GET', 'POST'])
 @login_required
 def chat():
-    return render_template('chat.html', user=auth.get_user_session())
+    return render_template('chat.html', user=get_user_session(), messages=get_messages())
 
 
 @app.route('/info', methods=['GET', 'POST'])
@@ -47,30 +51,26 @@ def info():
 @app.route('/logout', methods=['GET'])
 @login_required
 def logout():
-    auth.logout()
+    user_logout()
     return redirect(url_for('home'))
 
-#
-# @socketio.on('join', namespace='/chat')
-# def join(message):
-#     room = room_name
-#     payload = {'user': auth.get_user_session(), 'msg': auth.get_user_session() + ' has entered the room.',
-#                'type': 'status'}
-#     join_room(room)
-#     emit('status', payload, room=room)
-#
-#
-# @socketio.on('text', namespace='/chat')
-# def text(message):
-#     room = room_name
-#     emit('message', {'msg': auth.get_user_session() + ' : ' + message['msg']}, room=room)
+
+@socketio.on('join', namespace='/chat')
+def join(message):
+    join_room(room_name)
 
 
 @app.route('/ping', methods=['POST'])
 def ping():
     if request.method == 'POST':
         room = room_name
-        payload = {'user': auth.get_user_session(), 'msg': request.form['msg'], 'type': 'message'}
+        user = get_user_session()
+        msg = request.form['msg']
+
+        save_message(msg, user)
+
+        time = datetime.now().strftime("%I:%M %p")
+        payload = {'user': user, 'msg': user + ': ' + request.form['msg'], 'create_at': time}
         emit('message', payload, room=room, namespace='/chat', broadcast=True)
         return jsonify({"status": "okay"})
 

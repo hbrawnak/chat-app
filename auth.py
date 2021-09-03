@@ -1,7 +1,5 @@
-from flask import session
-from . import db
-
-db = db.db_connection()
+from model.user import User
+from helper import remove_user_session, set_user_session, get_user_session
 
 
 def set_user(username):
@@ -20,38 +18,28 @@ def login(username):
 
 
 def register(username):
-    return db.users.insert_one({"username": username, "isActive": True})
+    user = User(username=username)
+    return user.save_one()
 
 
 def logout():
     set_user_inactive(get_user_session())
-    session.pop('user', None)
+    remove_user_session()
 
 
 def _user_is_exist(username):
-    return db.users.find_one({"username": username})
-
-
-def set_user_session(username):
-    session['user'] = username
-
-
-def get_user_session():
-    return session.get('user')
+    return User.find_one({"username": username})
 
 
 def set_user_inactive(username):
-    q = {"username": username}
-    db.users.update_one(q, {"$set": {"isActive": False}})
+    q = {'username': username}
+    return User.update_one(where_key_value=q, set_key_value={"isActive": False})
 
 
 def set_user_active(username):
-    q = {"username": username}
-    db.users.update_one(q, {"$set": {"isActive": True}})
+    q = {'username': username}
+    return User.update_one(where_key_value=q, set_key_value={"isActive": True})
 
 
 def logged_in():
-    if not get_user_session():
-        return False
-    else:
-        return True
+    return True if get_user_session() else False
