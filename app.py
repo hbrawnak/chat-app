@@ -69,12 +69,12 @@ def ping():
 
         save_message(msg, user)
 
-        time = datetime.now().strftime("%I:%M %p")
+        time = datetime.now().strftime('%I:%M %p')
         payload = {'user': user, 'msg': user + ': ' + request.form['msg'], 'create_at': time}
         emit('message', payload, room=room, namespace='/chat', broadcast=True)
-        return jsonify({"status": "okay"})
+        return jsonify({'status': 'okay'})
 
-    return jsonify({"status": False})
+    return jsonify({'status': False})
 
 
 if __name__ == '__main__':

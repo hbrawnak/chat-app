@@ -18,8 +18,7 @@ def login(username):
 
 
 def register(username):
-    user = User(username=username)
-    return user.save_one()
+    return User(username=username).save_one()
 
 
 def logout():
@@ -32,13 +31,11 @@ def _user_is_exist(username):
 
 
 def set_user_inactive(username):
-    q = {'username': username}
-    return User.update_one(where_key_value=q, set_key_value={"isActive": False})
+    return User.update_one(where_key_value={"username": username}, set_key_value={"isActive": False})
 
 
 def set_user_active(username):
-    q = {'username': username}
-    return User.update_one(where_key_value=q, set_key_value={"isActive": True})
+    return User.update_one(where_key_value={"username": username}, set_key_value={"isActive": True})
 
 
 def logged_in():

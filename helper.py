@@ -14,16 +14,16 @@ def save_message(text, user):
 
 
 def get_messages():
-    return Message.find_all(sort_desc='created_at', limit=50)
+    return Message.find_all(sort_desc="created_at", limit=50)
 
 
 def set_user_session(username):
-    session['user'] = username
+    session["user"] = username
 
 
 def get_user_session():
-    return session.get('user')
+    return session.get("user")
 
 
 def remove_user_session():
-    session.pop('user', None)
+    session.pop("user", None)
