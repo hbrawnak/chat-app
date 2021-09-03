@@ -13,26 +13,79 @@
             </div>
         </div>
         <div class="chat-body">
-            <div class="message-content">
-                <ul>
-                    <li class="w-75">Naeem: Hi</li>
-                    <li class="w-75">Rana: ki obostha?</li>
 
-                    <li class="w-75 float-right">Habib: Hello</li>
+            <div class="message-content">
+                <ul id="chat" data-user="{{ user }}">
                 </ul>
             </div>
             <div class="message-box">
-                <form class="mt-4 pb-2" method="post" action="/">
+                <form class="mt-4 pb-2">
                     <div class="row mx-0 w-100">
                         <div class="col-8">
-                            <input type="text" class="form-control" name="message" id="message" placeholder="Username">
+                            <input type="text" id="text" class="form-control" name="message" id="message"
+                                   placeholder="type
+                            your message ..">
                         </div>
                         <div class="col-4">
-                            <button type="submit" class="btn btn-secondary btn-block">Send</button>
+                            <button type="button" id="send" class="btn btn-secondary btn-block">Send
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+
+    <script type="text/javascript" charset="utf-8">
+        var socket;
+        $(document).ready(function () {
+            socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+            socket.on('connect', function () {
+                socket.emit('join', {});
+            });
+            socket.on('status', function (data) {
+                let tx = GenerateMessageHtml(data)
+                $('#chat').append(tx);
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            socket.on('message', function (data) {
+                console.log(data)
+                let tx = GenerateMessageHtml(data)
+                $('#chat').append(tx + '\n');
+                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+            });
+            $('#send').click(function (e) {
+                text = $('#text').val();
+                $('#text').val('');
+
+                $.ajax({
+                    url: "ping",
+                    type: "post",
+                    data: {"msg": text}
+                }).success(function (data) {
+                    console.log(data)
+                });
+            });
+        });
+
+        function leave_room() {
+            socket.emit('left', {}, function () {
+                socket.disconnect();
+            });
+        }
+
+        function GenerateMessageHtml(data) {
+            if (data.type === 'status') {
+                return "<p>" + data.msg + "</p>";
+            } else {
+                let current_user = $("#chat").attr('data-user')
+                if (current_user === data.user) {
+                    return "<li class=\"w-75 float-right\">" + data.msg + "</li>";
+                } else {
+                    return "<li class=\"w-75\">" + data.msg + "</li>";
+                }
+            }
+        }
+    </script>
 {% endblock %}
