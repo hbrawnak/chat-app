@@ -1,12 +1,13 @@
+import logging
 import os
-
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from flask_socketio import SocketIO, join_room, emit
+from flask_socketio import SocketIO, join_room, leave_room, emit
 from datetime import datetime
 
 from auth import logged_in, get_user_session, set_user, logout as user_logout
-from helper import get_chat_room_active_users, save_message, get_messages
+from helper import get_chat_room_active_users, get_messages
 from . import login_required
+from worker import queue_worker as queue
 
 app = Flask(__name__, template_folder='templates')
 socketio = SocketIO(app, manage_session=False)
@@ -29,7 +30,7 @@ def home():
             else:
                 return redirect(url_for('home'))
         except Exception as e:
-            print(str(e))
+            logging.error(str(e))
             return redirect(url_for('home'))
     else:
         return render_template('login.html')
@@ -60,19 +61,24 @@ def join(message):
     join_room(room_name)
 
 
-@app.route('/ping', methods=['POST'])
-def ping():
+@socketio.on('left', namespace='/chat')
+def left(message):
+    leave_room(room_name)
+
+
+@app.route('/message', methods=['POST'])
+def message():
     if request.method == 'POST':
         room = room_name
         user = get_user_session()
         msg = request.form['msg']
 
-        save_message(msg, user)
-
         time = datetime.now().strftime('%I:%M %p')
         payload = {'user': user, 'msg': user + ': ' + request.form['msg'], 'create_at': time}
         emit('message', payload, room=room, namespace='/chat', broadcast=True)
-        return jsonify({'status': 'okay'})
+
+        queue(msg, user)
+        return jsonify({'status': True})
 
     return jsonify({'status': False})
 
