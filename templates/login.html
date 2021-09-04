@@ -14,13 +14,6 @@
         {% endif %}
     {% endwith %}
 
-    {% if form.username.errors %}
-        <ul class="errors">
-            {% for error in form.username %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
     <form class="py-3" method="POST" action="{{ url_for('home') }}">
         {{ form.csrf_token }}
         <div class="row mx-0 align-items-end">
