@@ -4,7 +4,7 @@ from database.db import RedisDB
 from rq import Queue
 from rq import Retry
 
-from helper import save_message
+from service.helper import save_message
 
 r = RedisDB().get_db()
 q = Queue(connection=r)

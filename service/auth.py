@@ -1,5 +1,5 @@
 from model.user import User
-from helper import remove_user_session, set_user_session, get_user_session
+from service.helper import remove_user_session, set_user_session, get_user_session
 
 
 def set_user(username):

@@ -4,10 +4,11 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from datetime import datetime
 
-from auth import logged_in, get_user_session, set_user, logout as user_logout
-from helper import get_chat_room_active_users, get_messages
+from service.auth import logged_in, get_user_session, set_user, logout as user_logout
+from service.helper import get_chat_room_active_users, get_messages
+from service.worker import queue_worker as queue
+
 from . import login_required
-from worker import queue_worker as queue
 
 app = Flask(__name__, template_folder='templates')
 socketio = SocketIO(app, manage_session=False)
