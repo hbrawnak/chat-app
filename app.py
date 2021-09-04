@@ -1,12 +1,14 @@
 import logging
 import os
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from datetime import datetime
 
-from services.auth import logged_in, get_user_session, set_user, logout as user_logout
+from services.auth import logged_in, get_user_session, logout as user_logout
 from services.helper import get_chat_room_active_users, get_messages
 from services.worker import queue_worker as message_queue
+
+from model.form import LoginForm
 
 from . import login_required
 
@@ -22,19 +24,26 @@ def home():
     if logged_in():
         return redirect(url_for('chat'))
 
-    if request.method == 'POST':
+    form = LoginForm(request.form)
+
+    if request.method == 'POST' and form.validate():
         try:
-            r = request.form['username']
-            if r:
-                set_user(r)
+            r = form.username.data
+
+            if not form.check_len(r):
+                flash('Username should be within 4 to 20 characters')
+                return redirect(url_for('home'))
+
+            if form.save(r):
                 return redirect(url_for('chat'))
             else:
                 return redirect(url_for('home'))
+
         except Exception as e:
             logging.error(str(e))
             return redirect(url_for('home'))
     else:
-        return render_template('login.html')
+        return render_template('login.html', form=form)
 
 
 @app.route('/chat', methods=['GET', 'POST'])
@@ -68,6 +77,7 @@ def left(message):
 
 
 @app.route('/message', methods=['POST'])
+@login_required
 def message():
     if request.method == 'POST':
         room = room_name
