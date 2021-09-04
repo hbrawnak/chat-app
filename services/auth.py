@@ -1,5 +1,5 @@
 from model.user import User
-from service.helper import remove_user_session, set_user_session, get_user_session
+from services.helper import remove_user_session, set_user_session, get_user_session
 
 
 def set_user(username):
@@ -14,7 +14,7 @@ def set_user(username):
 
 def login(username):
     set_user_session(username=username)
-    set_user_active(username)
+    return set_user_active(username)
 
 
 def register(username):
@@ -23,7 +23,7 @@ def register(username):
 
 def logout():
     set_user_inactive(get_user_session())
-    remove_user_session()
+    return remove_user_session()
 
 
 def _user_is_exist(username):

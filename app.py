@@ -4,9 +4,9 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_socketio import SocketIO, join_room, leave_room, emit
 from datetime import datetime
 
-from service.auth import logged_in, get_user_session, set_user, logout as user_logout
-from service.helper import get_chat_room_active_users, get_messages
-from service.worker import queue_worker as queue
+from services.auth import logged_in, get_user_session, set_user, logout as user_logout
+from services.helper import get_chat_room_active_users, get_messages
+from services.worker import queue_worker as message_queue
 
 from . import login_required
 
@@ -78,7 +78,7 @@ def message():
         payload = {'user': user, 'msg': user + ': ' + request.form['msg'], 'create_at': time}
         emit('message', payload, room=room, namespace='/chat', broadcast=True)
 
-        queue(msg, user)
+        message_queue(msg, user)
         return jsonify({'status': True})
 
     return jsonify({'status': False})

@@ -19,6 +19,7 @@ def get_messages():
 
 def set_user_session(username):
     session["user"] = username
+    return get_user_session()
 
 
 def get_user_session():
@@ -26,4 +27,4 @@ def get_user_session():
 
 
 def remove_user_session():
-    session.pop("user", None)
+    return session.pop("user", None)
