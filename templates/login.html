@@ -4,7 +4,7 @@
 
 {% block content %}
 
-    <form class="py-3" method="post" action="/">
+    <form class="py-3" method="post" action="{{ url_for('home') }}">
         <div class="row mx-0 align-items-end">
             <div class="col-8">
                 <label for="username" class="visually">Input your username to login</label>

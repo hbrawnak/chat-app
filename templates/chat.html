@@ -6,9 +6,9 @@
     <div class="chat-block">
         <div class="chat-header">
             <div class="d-flex justify-content-between p-3">
-                <p><a class="btn btn-secondary" href="/info">Info</a></p>
-                <p>Chat Header</p>
-                <p><a class="btn btn-secondary" href="/logout">Leave</a></p>
+                <p><a class="btn btn-secondary" href="{{ url_for('info') }}">Info</a></p>
+                <p>Chat App</p>
+                <p><a onclick="leave_room()" class="btn btn-secondary" href="{{ url_for('logout') }}">Leave</a></p>
 
             </div>
         </div>
@@ -41,50 +41,4 @@
             </form>
         </div>
     </div>
-
-
-    <script type="text/javascript" charset="utf-8">
-        var socket;
-        $(document).ready(function () {
-            socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
-            socket.on('connect', function () {
-                socket.emit('join', {});
-            });
-
-            socket.on('message', function (data) {
-                console.log(data)
-                let tx = GenerateMessageHtml(data)
-                $('#chat').append(tx);
-                //$('#chat').scrollTop($('#chat')[0].scrollHeight);
-                $('#chat').scrollTop($('#chat')[0].scrollHeight);
-            });
-            $('#send').click(function (e) {
-                text = $('#text').val();
-                $('#text').val('');
-
-                $.ajax({
-                    url: "ping",
-                    type: "post",
-                    data: {"msg": text}
-                }).success(function (data) {
-                    console.log(data)
-                });
-            });
-        });
-
-        function leave_room() {
-            socket.emit('left', {}, function () {
-                socket.disconnect();
-            });
-        }
-
-        function GenerateMessageHtml(data) {
-            let current_user = $("#chat").attr('data-user')
-            if (current_user === data.user) {
-                return "<li class=\"w-75 float-right\">" + data.msg + "<br><small>"+ data.create_at +"</small></li>";
-            } else {
-                return "<li class=\"w-75\">" + data.msg + "<br><small>"+ data.create_at +"</small></li>";
-            }
-        }
-    </script>
 {% endblock %}
