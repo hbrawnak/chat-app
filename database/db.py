@@ -6,12 +6,13 @@ import redis
 
 class Database:
     def __init__(self):
-        self.host = os.getenv('DATABASE_HOST', 'host.docker.internal:27017')
-        self.driver = MongoClient('mongodb://' + self.host)
+        self.host = os.getenv('DATABASE_HOST')
+        self.db_cred = os.getenv('DATABASE_CRED')
 
     def connect(self):
         try:
-            return self.driver.chatapp
+            client = MongoClient('mongodb+srv://' + self.db_cred + self.host + '?retryWrites=true&w=majority')
+            return client.chatapp
         except Exception as e:
             logging.error('Database connection error')
             return 'Database connection error'
