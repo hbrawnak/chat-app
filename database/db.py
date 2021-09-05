@@ -11,7 +11,8 @@ class Database:
 
     def connect(self):
         try:
-            client = MongoClient('mongodb+srv://' + self.db_cred + self.host + '?retryWrites=true&w=majority')
+            # client = MongoClient('mongodb+srv://' + self.db_cred + self.host + '?retryWrites=true&w=majority')
+            client = MongoClient('mongodb+srv://hbrawnak:Un9Oq2U4R9KvYcX7@cluster0.2nya1.mongodb.net/?retryWrites=true&w=majority')
             return client.chatapp
         except Exception as e:
             logging.error('Database connection error')
