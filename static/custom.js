@@ -15,13 +15,15 @@ $(document).ready(function () {
         text = $('#text').val();
         $('#text').val('');
 
-        $.ajax({
-            url: "message",
-            type: "post",
-            data: {"msg": text}
-        }).success(function (data) {
+        if (text) {
+            $.ajax({
+                url: "message",
+                type: "post",
+                data: {"msg": text}
+            }).success(function (data) {
 
-        });
+            });
+        }
     });
 });
 
