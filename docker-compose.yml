@@ -13,8 +13,8 @@ services:
       FLASK_ENV: development
 
   redis:
-    image: redis
-    container_name: redis_server
+    image: "redis:alpine"
+    container_name: "redis_server"
     tty: true
     ports:
       - "6379:6379"
