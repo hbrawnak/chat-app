@@ -14,7 +14,7 @@ def save_message(text, user):
 
 
 def get_messages():
-    return Message.find_all(sort_desc="created_at", limit=50)
+    return Message.find_all(sort_desc="created_at", limit=1000)
 
 
 def set_user_session(username):
