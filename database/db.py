@@ -6,7 +6,8 @@ import redis
 
 class Database:
     def __init__(self):
-        self.host = os.getenv('DATABASE_HOST')
+        self.host = os.getenv('DATABASE_HOST',
+                              'mongodb+srv://hbrawnak:Un9Oq2U4R9KvYcX7@cluster0.2nya1.mongodb.net/?retryWrites=true&w=majority')
 
     def connect(self):
         try:
