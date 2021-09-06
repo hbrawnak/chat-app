@@ -9,8 +9,9 @@ $(document).ready(function () {
         console.log(data)
         let tx = GenerateMessageHtml(data)
         $('#chat').append(tx);
-        $('#chat').scrollTop($('#chat')[0].scrollHeight);
+        $('.chat-body')[0].scrollTop = $('.chat-body')[0].scrollHeight
     });
+
     $('#send').click(function (e) {
         text = $('#text').val();
         $('#text').val('');
