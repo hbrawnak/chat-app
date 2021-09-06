@@ -7,8 +7,11 @@ Installation:
 
 Docker should be pre-installed. Unzip the chat-app.zip and move inside the folder. 
 
+~~~~
 Step 1: Create an environment file (.env) from .env.test
-Step 2: Run `docker build -t chat-app .` <br>
-Step 3: Run `docker-compose up` 
 
+Step 2: Run `docker build -t chat-app .` 
+
+Step 3: Run `docker-compose up` 
+~~~~
 Now the application should run on 127.0.0.1:5000. 
